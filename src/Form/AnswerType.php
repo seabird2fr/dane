@@ -37,6 +37,7 @@ class AnswerType extends AbstractType
                     'label' => false,
                 ));
                 $builder->add('correct');
+                $builder->add('justification');
                 break;
         }
 

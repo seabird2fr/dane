@@ -21,7 +21,7 @@ class QuestionController extends Controller
 {
     /**
      * @Route("/", defaults={"page": "1"}, name="question_index", methods="GET|POST")
-     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, methods={"GET"}, name="question_index_paginated")
+     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, methods="GET|POST", name="question_index_paginated")
      */
     public function index(int $page, QuestionRepository $questionRepository, CategoryRepository $categorie,Request $request): Response
     {
@@ -30,6 +30,9 @@ class QuestionController extends Controller
 
 // on récupère toutes les categories disponibles
         $categories= $categorie->findAll();
+
+// on récupère toutes les questions disponibles
+        $questions = $questionRepository->myFindAll(); 
 
 
         if (count($categories)>0){    
@@ -43,8 +46,19 @@ class QuestionController extends Controller
             }
             
 
+// formulaire des filtres cumulatifs en auto submit ( catégorie 1, catégorie 2,  ....)
             $form = $this->createFormBuilder()
             ->add('categorie', ChoiceType::class, [
+                'label' => 'Choisissez la categorie ',
+                'group_by' =>'null',
+                'choices'  => [
+                    $choix_categorie
+                ],
+                'attr' => array(
+                    'onchange' => 'submit()',
+                ),                   
+            ])
+            ->add('categorie2', ChoiceType::class, [
                 'label' => 'Choisissez la categorie ',
                 'group_by' =>'null',
                 'choices'  => [
@@ -76,18 +90,37 @@ class QuestionController extends Controller
         }
 
         $form->handleRequest($request);
-//dump($request->request->get('form')['categorie']);
+
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            if ($request->request->get('form')['categorie']!='toutes'){
-            $results2=$categorie->findBy(array('id' => $request->request->get('form')['categorie']));
+          
 
-            foreach ($results2  as $value) {
-                foreach ($value->getQuestions()  as $value2){
-                    $results[]=$value2;
-                }
-            }
+            if (($request->request->get('form')['categorie']!='toutes') || ($request->request->get('form')['categorie2']!='toutes'))
+            {
+
+            
+                // on boucle sur toutes les questions dispos
+                    foreach ($questions  as $question) 
+                    {
+
+                                foreach ($question->getCategories()  as $categorie) 
+                                {
+                                    $tabcategorie[]=$categorie->getId(); // on recup tous les id categories des questions sous forme d'un tableau
+                                }
+                                   
+                                    // si une des catégorie est à 'toutes' , on rajoute dans le tableau précédent 'toutes'
+                                 if (($request->request->get('form')['categorie']=='toutes')) $tabcategorie[]='toutes';
+                                 if (($request->request->get('form')['categorie2']=='toutes')) $tabcategorie[]='toutes';
+
+                                // on vérifie que les catégories choisies dans le formulaire sont dans le tableau 
+                                if ((in_array($request->request->get('form')['categorie'],$tabcategorie) && in_array($request->request->get('form')['categorie2'],$tabcategorie)) || (in_array($request->request->get('form')['categorie'],$tabcategorie) && in_array('toutes',$tabcategorie)) && (in_array($request->request->get('form')['categorie2'],$tabcategorie) && in_array('toutes',$tabcategorie))) 
+                                    $results[]=$question; // on récupère les bonnes questions associées aux catégories cumulées ( filtres)
+
+                                $tabcategorie=[]; // on réinitialise  le tableau catégorie
+
+                    }
+
             }
             else $results=$questionRepository->findAll($page);
 

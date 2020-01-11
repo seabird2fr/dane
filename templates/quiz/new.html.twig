@@ -10,3 +10,70 @@
     {{ include('quiz/_form.html.twig') }}
 
 {% endblock %}
+
+
+{% block javascripts %}
+
+<!-- DEBUT AJOUT JAVASCRIPT PERSO CACHER MONTRER-->
+<script language="javascript" type="text/javascript">
+
+
+$(document).ready(function(){
+
+  $('.toutmontrer').click(function(){
+     
+        $('.description').show('fast');
+
+})
+
+$('.toutcacher').click(function(){
+     
+        $('.description').slideUp('fast');
+
+})
+
+
+// cacher montrer        
+    $('div.description').hide();
+
+    $('.titre').each(function (){
+   {
+      
+      $(this).click(function(){
+          
+        var id = 'div' + $(this).attr('data-article');
+        //console.log(id);
+$('.description').not($('div#' + id)).slideUp('fast');
+     $('div#' + id).slideToggle();
+	
+    
+      });
+    
+    }        
+	})
+
+
+
+
+  // lecture couleur question dans le label et affichage au niveau catégorie
+ for(let i = 0; i < 300; i++){ 
+
+          $('#div' + i + ' .couleurQuestion').each(function (){
+
+             var Color = $(this).css("Color");
+             console.log(Color);
+            
+              var contenttitre = $(".title" + i).html();
+              $(".title" + i).html(contenttitre + '<span style="color:' + Color + '"> <i class="fas fa-square-full"></i></span>');
+          
+
+            })
+    }
+
+	
+                  }              
+                 );  
+</script>
+<!-- FIN AJOUT JAVASCRIPT PERSO CACHER MONTRER-->
+
+{% endblock %}

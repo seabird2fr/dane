@@ -33,6 +33,42 @@ class QuestionRepository extends ServiceEntityRepository
     }
 
 
+
+
+// ma propre requête FindAll
+      public function myFindAll()
+  {
+
+    // on fait SELECT a FROM App\Entity\Question a avec la méthode raccourci
+    $queryBuilder= $this->createQueryBuilder('a');
+
+    // On récupère la Query à partir du QueryBuilder
+    $query = $queryBuilder->getQuery();
+
+    // On récupère les résultats à partir de la Query
+    $results = $query->getResult();
+
+    // On retourne ces résultats
+    return $results;
+
+  }
+
+
+
+ // ma propre requête FindColor ( tableau des couleurs des questions)
+public function findColor(){
+
+$listeColor = $this->findBy(array(),array('color'=> 'desc'));
+//dump($listeColor);
+foreach ($listeColor as $color) {
+   $tabColor[] =$color->getColor();
+}
+
+return $tabColor;
+
+}
+
+
 // Ajout fonction seabird pour avoir le tableau des id des questions: 
 public function findId(){
 

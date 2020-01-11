@@ -110,6 +110,11 @@ class Quiz
      */
     private $extrait_end;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Question", inversedBy="quizzes")
+     */
+    private $question;
+
 
     public function __construct()
     {
@@ -118,10 +123,11 @@ class Quiz
         $this->setActive(true);
         $this->setShowResultQuestion(false);
         $this->setShowResultQuiz(false);
-        $this->setNumberOfQuestions(10);
+        $this->setNumberOfQuestions(1);
         $this->categories = new ArrayCollection();
         $this->workouts = new ArrayCollection();
         $this->setAllowAnonymousWorkout(false);
+        $this->question = new ArrayCollection();
     }
 
     public function getId()
@@ -338,6 +344,32 @@ class Quiz
     public function setExtraitEnd(?string $extrait_end): self
     {
         $this->extrait_end = $extrait_end;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Question[]
+     */
+    public function getQuestion(): Collection
+    {
+        return $this->question;
+    }
+
+    public function addQuestion(Question $question): self
+    {
+        if (!$this->question->contains($question)) {
+            $this->question[] = $question;
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): self
+    {
+        if ($this->question->contains($question)) {
+            $this->question->removeElement($question);
+        }
 
         return $this;
     }

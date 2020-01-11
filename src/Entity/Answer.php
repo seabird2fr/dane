@@ -42,6 +42,11 @@ class Answer
      */
     private $workout_correct_given = false;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $justification;
+
 
     public function __construct()
     {
@@ -97,6 +102,18 @@ class Answer
     public function setQuestion(?Question $question): self
     {
         $this->question = $question;
+
+        return $this;
+    }
+
+    public function getJustification(): ?bool
+    {
+        return $this->justification;
+    }
+
+    public function setJustification(?bool $justification): self
+    {
+        $this->justification = $justification;
 
         return $this;
     }

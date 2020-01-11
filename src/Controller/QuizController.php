@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\AnswerHistory;
+use App\Entity\Category;
 use App\Entity\Question;
 use App\Entity\QuestionHistory;
 use App\Entity\Quiz;
@@ -646,6 +647,7 @@ else {
         //     throw $this->createNotFoundException();
         // }
 
+// numéro de la question ( ici 1)
         $questionNumber = $workout->getNumberOfQuestions();
         $questionResult = 0;
         $workoutScore = 0;
@@ -665,6 +667,7 @@ else {
         //$lastQuestionHistory = $questionHistoryRepository->findLastByWorkout($workout);
         $questionsHistory = $questionHistoryRepository->findAllByWorkout($workout);
         if ($questionsHistory) {
+            //dump($questionsHistory);
             $lastQuestionHistory = $questionsHistory[0];
             $currentQuestionResult = +1;
             if (!$lastQuestionHistory->getEndedAt()) {
@@ -734,7 +737,7 @@ else {
     }
 }
 
-
+/*
         // Check if enough questions for this quiz
 $questionsCount = $questionRepository->countByCategories($quiz->getCategories());
 if ($questionsCount < $quiz->getNumberOfQuestions()) {
@@ -749,16 +752,29 @@ if ($questionsCount < $quiz->getNumberOfQuestions()) {
         ]
     );
 }
+*/
+        // Next question nombre de question choisi pour le quiz en aléatoire
+//if ($questionNumber < $quiz->getNumberOfQuestions()) {
 
-        // Next question
-if ($questionNumber < $quiz->getNumberOfQuestions()) {
+// nombre de question choisi pour le quiz en manuel
+if ($questionNumber < count($quiz->getQuestion())) {
+
     $questionNumber++;
     $workout->setNumberOfQuestions($questionNumber);
 
     $questionHasBeenPosted = true;
     while ($questionHasBeenPosted) {
-                // Draw a random question
-        $nextQuestion = $questionRepository->findOneRandomByCategories($quiz->getCategories());
+                
+        // Draw a random question
+        // Question obtenues de manière aléatoire
+    //$nextQuestion = $questionRepository->findOneRandomByCategories($quiz->getCategories());
+
+//*******************prochaine question en choix manuel aléatoire*********************
+$IdQuestion = rand(1,count($quiz->getQuestion()));
+//$nextQuestion = $questionRepository->find($quiz->getQuestion()[$questionNumber-1]->getId());
+$nextQuestion = $questionRepository->find($quiz->getQuestion()[$IdQuestion-1]->getId());
+//************************************************************************
+ 
                 // Check if this question has not already been posted
         $questionHasBeenPosted = false;
         foreach ($questionsHistory as $questionHistory) {
@@ -905,33 +921,47 @@ if ($questionNumber < $quiz->getNumberOfQuestions()) {
     /**
      * @Route("/new", name="quiz_new", methods="GET|POST")
      */
-    public function new(Request $request, EntityManagerInterface $em): Response
+    public function new(Request $request, EntityManagerInterface $em, CategoryRepository $cat): Response
     {
         $this->denyAccessUnlessGranted('ROLE_TEACHER', null, 'Access not allowed');
 
         $quiz = $em->getRepository(Quiz::class)->create();
 
+// on va fabriquer un tableau avec toutes les catégories dispos
+        $toutes_les_categories = $cat->findAll();
+        foreach ($toutes_les_categories as $categories) {
+            $tabcat[]=$categories->getShortname();
+        }
+
+        //arsort($tabcat); // ordre croissant
+        //dump($tabcat);exit;
+
+
         $form = $this->createForm(QuizType::class, $quiz);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $questionRepository = $em->getRepository(Question::class);
 
+            //Nombre de questions du quiz
+           $quiz->setNumberOfQuestions(count($quiz->getQuestion()));
             // Check if enough questions for this quiz
+           /* 
             $questionsCount = $questionRepository->countByCategories($quiz->getCategories());
             if ($questionsCount < $quiz->getNumberOfQuestions()) {
                 $this->addFlash('danger', 'Not enough questions ('.$questionsCount.') for this quiz');
             } else {
+            */
                 $em->persist($quiz);
                 $em->flush();
 
                 $this->addFlash('success', sprintf('Quiz "%s" is created.', $quiz->getTitle()));
 
                 return $this->redirectToRoute('quiz_index');
-            }
+           // }
         }
         return $this->render('quiz/new.html.twig', [
             'quiz' => $quiz,
+            'tabcat' => $tabcat,
             'form' => $form->createView(),
         ]);
     }
@@ -949,15 +979,28 @@ if ($questionNumber < $quiz->getNumberOfQuestions()) {
     /**
      * @Route("/{id}/edit", name="quiz_edit", methods="GET|POST")
      */
-    public function edit(Request $request, Quiz $quiz): Response
+    public function edit(Request $request, Quiz $quiz, CategoryRepository $cat): Response
     {
         $this->denyAccessUnlessGranted('ROLE_TEACHER', null, 'Access not allowed');
+
+
+        // on va fabriquer un tableau avec toutes les catégories dispos
+        $toutes_les_categories = $cat->findAll();
+        foreach ($toutes_les_categories as $categories) {
+            $tabcat[]=$categories->getShortname();
+        }
+
+        //arsort($tabcat); // ordre croissant
+        //dump($tabcat);exit;
 
         $form = $this->createForm(QuizType::class, $quiz);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $quiz->setUpdatedAt(new \DateTime());
+
+            //Nombre de questions du quiz
+           $quiz->setNumberOfQuestions(count($quiz->getQuestion()));
 
             $this->getDoctrine()->getManager()->flush();
 
@@ -969,6 +1012,7 @@ if ($questionNumber < $quiz->getNumberOfQuestions()) {
 
         return $this->render('quiz/edit.html.twig', [
             'quiz' => $quiz,
+            'tabcat' => $tabcat,
             'form' => $form->createView(),
         ]);
     }

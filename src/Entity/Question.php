@@ -58,7 +58,17 @@ class Question
 
 
 
-public $justify_reponse; // ajout seabird champ justification réponse
+public $justify_reponse;
+
+/**
+ * @ORM\Column(type="string", length=255, nullable=true)
+ */
+private $color;
+
+/**
+ * @ORM\ManyToMany(targetEntity="App\Entity\Quiz", mappedBy="question")
+ */
+private $quizzes; // ajout seabird champ justification réponse
 
     public function __construct()
     {
@@ -66,6 +76,7 @@ public $justify_reponse; // ajout seabird champ justification réponse
         $this->setUpdatedAt(new \DateTime());
         $this->categories = new ArrayCollection();
         $this->answers = new ArrayCollection();
+        $this->quizzes = new ArrayCollection();
     }
 
     public function getId()
@@ -174,6 +185,46 @@ public $justify_reponse; // ajout seabird champ justification réponse
     public function setLanguage(?Language $language): self
     {
         $this->language = $language;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Quiz[]
+     */
+    public function getQuizzes(): Collection
+    {
+        return $this->quizzes;
+    }
+
+    public function addQuiz(Quiz $quiz): self
+    {
+        if (!$this->quizzes->contains($quiz)) {
+            $this->quizzes[] = $quiz;
+            $quiz->addQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuiz(Quiz $quiz): self
+    {
+        if ($this->quizzes->contains($quiz)) {
+            $this->quizzes->removeElement($quiz);
+            $quiz->removeQuestion($this);
+        }
 
         return $this;
     }

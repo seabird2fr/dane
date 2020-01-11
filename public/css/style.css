@@ -77,3 +77,26 @@ input[type=checkbox] + label {
     padding: unset;
     padding: 20px;
 }
+
+
+/*ajout couleur pour selectpicker*/
+.background_rouge {
+    color:#FF0000 !important;
+    background: #FF0000 !important;
+    
+}
+
+.background_vert {
+    background: #008000 !important;
+    color:#008000 !important;
+}
+
+.background_jaune {
+    background: #ffff00!important;
+    color: #ffff00 !important;
+}
+
+.background_purple {
+    background: purple!important;
+    color: purple !important;
+}

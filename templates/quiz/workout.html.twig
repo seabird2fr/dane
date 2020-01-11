@@ -28,7 +28,33 @@
        
    <div style="display:none"> {{ form_row(form.text) }}</div>
 
-    {{ form_row(form.answers) }}
+    <!-- création tableaux réponses et justifications -->
+{% set myArray1 = [] %}
+{% set myArray2 = [] %}
+{% for answer in form.answers %}
+
+    {% if (answer.vars.value.justification == true) %}
+            {% set myArray2 = myArray2|merge([answer]) %}  
+    {% endif %}    
+
+    {% if (answer.vars.value.justification == false) %}
+            {% set myArray1 = myArray1|merge([answer]) %}  
+    {% endif %}  
+
+{% endfor %}   
+
+<!-- on merge les deux tableaux en 1 seul -->
+{% set myArray1 = myArray1|merge(myArray2) %}    
+
+{% set boucle=1 %}
+{% for answer in myArray1 %}
+    {% if ((answer.vars.value.justification == true) and (boucle==1)) %}
+        <div style="font-weight: bold">Justifications<hr></div>
+        {% set boucle=0 %}
+    {% endif %} 
+
+    {{form_row(answer)}}
+{% endfor %}   
 
 
         <div class="progress" style="height: 10px;">

@@ -10,6 +10,7 @@
     {{ form_start(form) }}
 
     {{ form_row(form.text,{'label':'Entrer le texte'}) }}
+    {{ form_row(form.color,{'label':'Choisir une couleur'}) }}
  	{{ form_row(form.categories,{'label':'Choisir une catégorie'}) }}
  	{{ form_row(form.answers,{'label':'Réponses'}) }}
 
@@ -25,4 +26,18 @@
 
 {% block javascripts %}
     <script src="{{ asset('js/question.js') }}" type="text/javascript"></script>
+
+
+    <script>
+// ajout seabird
+
+//$('#category_color').selectpicker();
+
+      $('#question_color').selectpicker({
+          //style: 'btn-info',
+          //size: 4
+      });
+
+</script>
+
 {% endblock %}
