@@ -32,7 +32,7 @@ class CategoryController extends Controller
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_TEACHER', null, 'Access not allowed');
-
+       
         $category = $em->getRepository(Category::class)->create();
 
         $form = $this->createForm(CategoryType::class, $category);
@@ -70,6 +70,7 @@ class CategoryController extends Controller
     public function edit(Request $request, Category $category): Response
     {
         $this->denyAccessUnlessGranted('ROLE_TEACHER', null, 'Access not allowed');
+     
 
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
@@ -95,6 +96,7 @@ class CategoryController extends Controller
     public function delete(Request $request, Category $category, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_TEACHER', null, 'Access not allowed');
+     
 
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
             //$em = $this->getDoctrine()->getManager();

@@ -55,7 +55,7 @@ security:
         - { path: ^/quiz, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/question, roles: ROLE_USER }
         - { path: ^/answer, roles: ROLE_USER }
-        - { path: ^/category, roles: ROLE_ADMIN }
+        - { path: ^/category, roles: ROLE_TEACHER }
         - { path: ^/user, roles: ROLE_TEACHER }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
