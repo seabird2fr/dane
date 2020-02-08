@@ -40,6 +40,10 @@ class CategoryController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             //$em = $this->getDoctrine()->getManager();
+
+            // on attribue au shortname le longname
+            $category-> setShortname($category->getLongname());
+
             $em->persist($category);
             $em->flush();
 
@@ -76,6 +80,10 @@ class CategoryController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // on attribue au shortname le longname
+            $category-> setShortname($category->getLongname());
+
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', sprintf('Category "%s" mise à jour.', $category->getShortname()));

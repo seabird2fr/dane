@@ -1,6 +1,9 @@
 {{ form_start(form) }}
     
-    {{ form_row(form.shortname,{'label':'Nom abrégé'}) }}
+   <div style="display:none">
+    {{ form_row(form.shortname,{'label':'Nom abrégé','required':false}) }}
+	</div>
+
     {{ form_row(form.longname,{'label':'Nom'}) }}
 
     <a class="btn btn-secondary" href="{{ path('category_index') }}"><i class="fas fa-arrow-circle-left"></i> {{'Retour à la liste'|trans}}</a>
