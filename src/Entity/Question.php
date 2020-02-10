@@ -15,7 +15,8 @@ use App\Repository\LanguageRepository;
 class Question
 {
 
-    public const NUM_ITEMS = 10;
+// nombre de questions par page ( lors de la pagination)
+    public const NUM_ITEMS = 50;
 
     /**
      * @ORM\Id()

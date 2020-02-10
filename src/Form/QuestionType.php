@@ -71,7 +71,7 @@ class QuestionType extends AbstractType
                         return $er->createQueryBuilder('c')->andWhere('c.language = :language')->setParameter('language', $this->param->get('locale'))->orderBy('c.shortname', 'ASC');
                      },
                     'choice_label' => 'longname',
-                    'multiple' => true
+                    'multiple' => false
                 ));
                 $builder->add('answers', CollectionType::class, array(
                     'entry_type' => AnswerType::class,
