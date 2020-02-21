@@ -1,17 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% form_theme form with ['bootstrap_4_layout.html.twig', _self] %}
 
 {% block title %}{{'Nouvelle Question'|trans}}{% endblock %}
 
 {% block body %}
     <h1>Créer une nouvelle Question</h1>
 
+    {% set MiseEnFormeCategorie %}
+        {{ form_row(form.categories)}}
+    {% endset %}
+
     {{ form_start(form) }}
 
     {{ form_row(form.text,{'label':'Entrer le texte'}) }}
     {{ form_row(form.color,{'label':'Choisir une couleur'}) }}
- 	{{ form_row(form.categories,{'label':'Choisir une catégorie'}) }}
+
+    {# On transforme choix multiple en choix simple #}
+    {{ MiseEnFormeCategorie|replace({'multiple="multiple"':''})|raw }}
+
+ {#	{{ form_row(form.categories,{'label':'Choisir une catégorie'}) }} #}
+
  	{{ form_row(form.answers,{'label':'Réponses'}) }}
 
 
@@ -19,6 +28,10 @@
     {% if is_granted('ROLE_TEACHER') %}
         <button class="btn btn-primary"><i class="fas fa-check"></i> {{ button_label|default('Sauver'|trans) }}</button>
     {% endif %}
+
+
+
+
 
 {{ form_end(form) }}
 
@@ -41,3 +54,4 @@
 </script>
 
 {% endblock %}
+

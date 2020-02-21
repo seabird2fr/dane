@@ -49,7 +49,7 @@ class QuestionController extends Controller
 // formulaire des filtres cumulatifs en auto submit ( catégorie 1, catégorie 2,  ....)
             $form = $this->createFormBuilder()
             ->add('categorie', ChoiceType::class, [
-                'label' => 'Choisissez la categorie ',
+                'label' => 'Choisissez la categorie afin de filtrer',
                 'group_by' =>'null',
                 'choices'  => [
                     $choix_categorie

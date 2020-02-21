@@ -1,8 +1,17 @@
+ {% set MiseEnFormeCategorie %}
+        {{ form_row(form.categories)}}
+ {% endset %}
+
 {{ form_start(form) }}
 
      {{ form_row(form.text,{'label':'Entrer le texte'}) }}
     {{ form_row(form.color,{'label':'Choisir une couleur'}) }}
- 	{{ form_row(form.categories,{'label':'Choisir une catégorie'}) }}
+
+	{# On transforme choix multiple en choix simple #}
+    {{ MiseEnFormeCategorie|replace({'multiple="multiple"':''})|raw }}
+
+ 	{# {{ form_row(form.categories,{'label':'Choisir une catégorie'}) }} #}
+
  	{{ form_row(form.answers,{'label':'Réponses'}) }}
 
     <a class="btn btn-secondary" href="{{ path('question_index') }}"><i class="fas fa-arrow-circle-left"></i> {{'Retour à la liste'|trans}}</a>

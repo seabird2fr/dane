@@ -10,6 +10,7 @@ use App\Repository\QuestionRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -72,6 +73,25 @@ class QuizType extends AbstractType
         $builder->add('active');
           // extrait texte de fin de quiz
         $builder->add('extrait_end');
+
+// http://embed.plnkr.co/B4BatpwxCa2cBoYo0oEQ/
+        // acces au quiz privé ou public
+        $builder->add('access', ChoiceType::class, [
+                'choices' => [
+                    'Privé' => 0,
+                    'Public' => 1,
+                    ],
+
+                'multiple' => false, 
+                'expanded' => true,
+                
+                // valeur par default
+               // 'data' => 0,
+                
+               // 'attr'=>['class'=>'radio radio-inline radio-success radio-md custom-control-inline']
+                    ])
+        ;
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

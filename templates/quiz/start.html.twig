@@ -37,9 +37,21 @@
         {% if (is_granted('ROLE_USER')) %}
             <a class="mt-3 btn btn-secondary mr-2" href="{{ path('quiz_index') }}" style="display:none"><i class="fas fa-arrow-circle-left"></i> {{'Retour à la liste'}}</a>
         {% endif %}
-        {% if (is_granted('ROLE_USER')) or (quiz.allowAnonymousWorkout) %}
+
+
+        {% if is_granted('ROLE_TEACHER') %}
             <button class="mt-3 float-right btn btn-primary mr-2" type="submit">{{ button_label|default('Suivant') }} <i class="fas fa-arrow-circle-right"></i></button>
+        {% else %}
+            {% if (((is_granted('ROLE_USER')) or (quiz.allowAnonymousWorkout)) and quiz.access == 1)  %}
+            <button class="mt-3 float-right btn btn-primary mr-2" type="submit">{{ button_label|default('Suivant') }} <i class="fas fa-arrow-circle-right"></i></button>
+            {% else %}
+            <td>
+                <span class="badge badge-danger float-right">{{ quiz.title }} désactivé</span>&nbsp;
+            </td>
+            {% endif %}
+
         {% endif %}
+
     </form>
 
 {% endblock %}

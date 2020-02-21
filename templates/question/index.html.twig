@@ -15,8 +15,11 @@
     
         {{ form_start(form) }}
 
-            {{ form_widget(form) }}
+            {{ form_row(form.categorie) }}
 
+        <div style="display:none">
+            {{ form_row(form.categorie2) }}
+        </div>
             {{ form_end(form) }}
 
 

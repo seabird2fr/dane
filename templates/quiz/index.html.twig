@@ -41,6 +41,14 @@
                     <td>{{ quiz.allowAnonymousWorkout ? 'Yes' : 'No' }}</td>
                     <td>
                         <div class="form-check-inline">
+
+
+                        {% if quiz.access == 1 %}
+                           <span class="badge badge-success">Public</span>&nbsp;
+                            {% else %}
+                           <span class="badge badge-danger">Privé</span>&nbsp;
+                        {% endif %}
+
                             <a class="btn btn-primary btn-sm mr-2" href="{{ path('quiz_show', {'id': quiz.id}) }}" title="{{'Montrer'}}"><i class="fas fa-eye"></i></a>
                             <a class="btn btn-primary btn-sm mr-2" href="{{ path('quiz_edit', {'id': quiz.id}) }}" title="{{'Editer'}}"><i class="fas fa-pencil-alt"></i></a>
                             <a class="btn btn-primary btn-sm mr-2" href="{{ path('quiz_workout_delete', {'id': quiz.id}) }}" title="{{'Reset'}}"  onclick="return confirm('Etes-vous sur de vouloir réinitialiser le quiz ?')"><i class="fas fa-sync-alt"></i></a>
@@ -49,9 +57,13 @@
                         </div>
                     </td>
                 {% else %}
-                    {% if is_granted('ROLE_USER') %}
+                    {% if is_granted('ROLE_USER') and quiz.access == 1 %}
                     <td>
                         <a class="btn btn-primary btn-sm mr-2" href="{{ path('quiz_start', {'id': quiz.id}) }}">{{'Commencer'}} <i class="fas fa-arrow-circle-right"></i></a>
+                    </td>
+                {% else %}
+                     <td>
+                        <span class="badge badge-danger">{{ quiz.title }} désactivé</span>&nbsp;
                     </td>
                     {% endif %}
                 {% endif %}

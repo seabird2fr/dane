@@ -115,6 +115,11 @@ class Quiz
      */
     private $question;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $access;
+
 
     public function __construct()
     {
@@ -370,6 +375,18 @@ class Quiz
         if ($this->question->contains($question)) {
             $this->question->removeElement($question);
         }
+
+        return $this;
+    }
+
+    public function getAccess(): ?bool
+    {
+        return $this->access;
+    }
+
+    public function setAccess(?bool $access): self
+    {
+        $this->access = $access;
 
         return $this;
     }
